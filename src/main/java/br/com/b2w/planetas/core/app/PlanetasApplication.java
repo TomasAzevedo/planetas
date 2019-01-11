@@ -15,7 +15,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 public class PlanetasApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PlanetasApplication.class, args);
+		SpringApplication.run(PlanetasApplication.class, args); 
 	}
 
 }
