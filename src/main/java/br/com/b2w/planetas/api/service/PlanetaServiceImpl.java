@@ -3,9 +3,11 @@
  */
 package br.com.b2w.planetas.api.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.b2w.planetas.api.model.Planeta;
+import br.com.b2w.planetas.swapi.service.StarWarService;
 
 /**
  * 
@@ -17,13 +19,15 @@ import br.com.b2w.planetas.api.model.Planeta;
 @Service
 public class PlanetaServiceImpl implements PlanetaService {
 	
-	
+	@Autowired
+	private StarWarService starWarService;
 	
 	
 
 	@Override
 	public Planeta criar(Planeta planeta) {
-		// TODO Auto-generated method stub
+		
+		
 		return null;
 	}
 
@@ -53,8 +57,13 @@ public class PlanetaServiceImpl implements PlanetaService {
 	
 	@Override
 	public Planeta obterPorNome(String nome) {
-		// TODO Auto-generated method stub
-		return null;
+		Planeta planeta = new Planeta();
+		planeta.set_id("1");
+		planeta.setNome(nome);
+		planeta.setClima("Arid");
+		planeta.setTerreno("Dessert");
+		planeta.setQtdFilmes(starWarService.obterQuantidadeFilmes(nome));
+		return planeta;
 	}
 
 	
