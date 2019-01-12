@@ -20,6 +20,8 @@ import com.mongodb.MongoClient;
 @EnableMongoRepositories(basePackages = "br.com.b2w.planetas.api")
 public class MongoConfiguration extends AbstractMongoConfiguration {
   
+	//TODO colocar as configurações no properties.
+	
     @Override
     protected String getDatabaseName() {
         return "planetas";

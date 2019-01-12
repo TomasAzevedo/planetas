@@ -8,6 +8,7 @@ import java.net.URI;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+
 import br.com.b2w.planetas.api.model.Planeta;
 import br.com.b2w.planetas.api.service.PlanetaService;
 
@@ -39,6 +41,7 @@ import br.com.b2w.planetas.api.service.PlanetaService;
 @RequestMapping("/planetas")
 class PlanetasController {
 	
+	private static final String INFO = "Info";
 	
 	@Autowired
 	private PlanetaService planetaService;
@@ -52,11 +55,20 @@ class PlanetasController {
 	@PostMapping
 	public ResponseEntity<Planeta> criar(@Valid @RequestBody(required=true) Planeta planeta) {
 		
-		Planeta planetaNovo = planetaService.criar(planeta);
+		Planeta planetaNovo = null; 
+		
+		try {
+			
+			planetaNovo = planetaService.criar(planeta);
+			
+		} catch (DuplicateKeyException dke) {
+			return ResponseEntity.status(HttpStatus.CONFLICT)
+								 .header(INFO, "Este planeta já existe.").build();
+		}
 		
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(planetaNovo.getId()).toUri();
 		
-		return ResponseEntity.created(location).body(planeta);
+		return ResponseEntity.created(location).body(planetaNovo);
 		
 	}
 	
@@ -111,6 +123,11 @@ class PlanetasController {
 	
 	@PutMapping
 	public ResponseEntity<Planeta> atualizar(@Valid @RequestBody Planeta planeta) {
+		
+		if(null == planeta.getId() || planeta.getId().isEmpty()) {
+			return ResponseEntity.badRequest()
+								 .header(INFO, "Para atualizar um planeta é necessário informar o id.").build();
+		}
 		
 		Planeta planetaAtualizado = planetaService.alterar(planeta);
 		
