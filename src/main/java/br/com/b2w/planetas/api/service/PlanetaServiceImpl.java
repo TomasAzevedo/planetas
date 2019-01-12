@@ -4,9 +4,12 @@
 package br.com.b2w.planetas.api.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.b2w.planetas.api.model.Planeta;
+import br.com.b2w.planetas.api.repository.PlanetaRepository;
 import br.com.b2w.planetas.swapi.service.StarWarService;
 
 /**
@@ -20,6 +23,9 @@ import br.com.b2w.planetas.swapi.service.StarWarService;
 public class PlanetaServiceImpl implements PlanetaService {
 	
 	@Autowired
+	private PlanetaRepository planetaRespository;
+	
+	@Autowired
 	private StarWarService starWarService;
 	
 	
@@ -27,19 +33,26 @@ public class PlanetaServiceImpl implements PlanetaService {
 	@Override
 	public Planeta criar(Planeta planeta) {
 		
+		return planetaRespository.insert(planeta);
 		
-		return null;
 	}
 
 	
 	
 	
 	
-//	@Override
-//	public Page<Planeta> listar(Page<Planeta> pageable) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
+	@Override
+	public Page<Planeta> listar(Pageable pageable) {
+		
+		Page<Planeta> page = planetaRespository.findAll(pageable);
+		
+		page.getContent().forEach(planeta -> {
+			planeta.setQtdFilmes(starWarService.obterQuantidadeFilmes(planeta.getNome()));
+		});
+		
+		return page;
+		
+	}
 
 	
 	
@@ -47,8 +60,15 @@ public class PlanetaServiceImpl implements PlanetaService {
 	
 	@Override
 	public Planeta obterPorId(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Planeta planeta = planetaRespository.findById(id).orElse(null);
+		
+		if(null != planeta) {
+			planeta.setQtdFilmes(starWarService.obterQuantidadeFilmes(planeta.getNome()));
+		}
+		
+		return planeta;
+		
 	}
 
 	
@@ -57,13 +77,15 @@ public class PlanetaServiceImpl implements PlanetaService {
 	
 	@Override
 	public Planeta obterPorNome(String nome) {
-		Planeta planeta = new Planeta();
-		planeta.set_id("1");
-		planeta.setNome(nome);
-		planeta.setClima("Arid");
-		planeta.setTerreno("Dessert");
-		planeta.setQtdFilmes(starWarService.obterQuantidadeFilmes(nome));
+		
+		Planeta planeta = planetaRespository.findByNome(nome).orElse(null);
+		
+		if(null != planeta) {
+			planeta.setQtdFilmes(starWarService.obterQuantidadeFilmes(planeta.getNome()));
+		}
+				
 		return planeta;
+		
 	}
 
 	
@@ -72,8 +94,11 @@ public class PlanetaServiceImpl implements PlanetaService {
 	
 	@Override
 	public Planeta alterar(Planeta planeta) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Planeta planetaAtualizado = planetaRespository.save(planeta);
+		
+		return planetaAtualizado;
+		
 	}
 
 	
@@ -82,7 +107,8 @@ public class PlanetaServiceImpl implements PlanetaService {
 	
 	@Override
 	public void excluir(String id) {
-		// TODO Auto-generated method stub
+		
+		planetaRespository.deleteById(id);
 		
 	}
 	

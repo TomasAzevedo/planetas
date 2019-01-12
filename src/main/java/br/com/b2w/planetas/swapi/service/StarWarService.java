@@ -59,8 +59,8 @@ public class StarWarService {
 		List<Planet> planets = response.getBody().getResults();
 		
 		Planet planet = planets.stream()
-								.filter(p -> p.getName().equalsIgnoreCase(nomePlaneta))
-								.findFirst().orElse(null);
+							   .filter(p -> p.getName().equalsIgnoreCase(nomePlaneta))
+							   .findFirst().orElse(null);
 		
 		return null != planet ? planet.getFilms().size() : 0;
 		

@@ -3,6 +3,11 @@
  */
 package br.com.b2w.planetas.api.service;
 
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import br.com.b2w.planetas.api.model.Planeta;
 
 /**
@@ -38,7 +43,7 @@ public interface PlanetaService {
 	 * @return a lista de planetas.
 	 * 
 	 */
-	//public Page<Planeta> listar(Page<Planeta> pageable);
+	public Page<Planeta> listar(Pageable pageable);
 	
 	
 	

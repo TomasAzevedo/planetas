@@ -8,6 +8,8 @@ import java.net.URI;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -52,7 +54,7 @@ class PlanetasController {
 		
 		Planeta planetaNovo = planetaService.criar(planeta);
 		
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(planetaNovo.get_id()).toUri();
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(planetaNovo.getId()).toUri();
 		
 		return ResponseEntity.created(location).body(planeta);
 		
@@ -64,12 +66,12 @@ class PlanetasController {
 	
 	
 	
-//	@GetMapping	
-//	public Page<Planeta> listar(Page<Planeta> pageable) {
-//		
-//		return planetaService.listar(pageable);
-//		
-//	}
+	@GetMapping(value="/lista")	
+	public Page<Planeta> listar(Pageable pageable) {
+		
+		return planetaService.listar(pageable);
+		
+	}
 
 	
 	
@@ -78,11 +80,11 @@ class PlanetasController {
 	
 	
 	@GetMapping("/{id}")
-	public  ResponseEntity<Planeta> buscarPeloCodigo(@PathVariable String id) {
+	public  ResponseEntity<Planeta> buscarPeloId(@PathVariable String id) {
 		
 		Planeta planeta = planetaService.obterPorId(id);
 		
-		return null==planeta ? ResponseEntity.notFound().build() : ResponseEntity.ok(planeta);
+		return null == planeta ? ResponseEntity.notFound().build() : ResponseEntity.ok(planeta);
 		
 	}
 	
