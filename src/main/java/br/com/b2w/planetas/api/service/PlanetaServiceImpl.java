@@ -93,11 +93,17 @@ public class PlanetaServiceImpl implements PlanetaService {
 	
 	
 	@Override
-	public Planeta alterar(Planeta planeta) {
+	public Planeta alterar(Planeta planeta) throws IllegalArgumentException {
+		
+		if(planetaRespository.findById(planeta.getId()).isPresent()) {
 		
 		Planeta planetaAtualizado = planetaRespository.save(planeta);
 		
 		return planetaAtualizado;
+		
+		} else {
+			throw new IllegalArgumentException("Esse planeta não existe.");
+		}
 		
 	}
 

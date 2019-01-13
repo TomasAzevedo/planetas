@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -28,9 +29,11 @@ import br.com.b2w.planetas.swapi.model.Retorno;
 @Service 
 public class StarWarService {
 	
-	private static final String URL = "https://swapi.co/api";
+	@Value("${api.swapi.url}")
+	private String url;
 	
-	private static final String SEARCH = "/planets/?search=";
+	@Value("${api.swapi.planets.search}")
+	private String planetsSearch;
 	
 	@Autowired
 	private RestTemplate restTemplate;
@@ -54,7 +57,7 @@ public class StarWarService {
 	
 	public Integer obterQuantidadeFilmes(String nomePlaneta) {
 		
-		ResponseEntity<Retorno> response = restTemplate.exchange(URL + SEARCH + nomePlaneta, HttpMethod.GET, httpEntity, Retorno.class);
+		ResponseEntity<Retorno> response = restTemplate.exchange(url + planetsSearch + nomePlaneta, HttpMethod.GET, httpEntity, Retorno.class);
 		
 		List<Planet> planets = response.getBody().getResults();
 		

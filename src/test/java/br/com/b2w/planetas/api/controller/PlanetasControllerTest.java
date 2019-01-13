@@ -118,8 +118,6 @@ public class PlanetasControllerTest {
 		       .content(json.write(planetaTeste).getJson()))
 			   .andExpect(status().isConflict());
     	
-    	//TODO tratar os erros da API
-    	
     }
     
     
@@ -133,8 +131,6 @@ public class PlanetasControllerTest {
 		       .content(json.write(new Planeta()).getJson()))
 			   .andExpect(status().isBadRequest());
     	
-    	//TODO tratar os erros da API
-    	
     }
     
     
@@ -147,8 +143,6 @@ public class PlanetasControllerTest {
 		       .contentType(MediaType.APPLICATION_JSON))
 		       //.content(json.write(new Planeta()).getJson()))
 			   .andExpect(status().isBadRequest());
-    	
-    	//TODO tratar os erros da API
     	
     }
     

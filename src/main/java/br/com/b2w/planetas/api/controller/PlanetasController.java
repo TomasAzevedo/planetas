@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 
 import br.com.b2w.planetas.api.model.Planeta;
 import br.com.b2w.planetas.api.service.PlanetaService;
@@ -41,7 +41,8 @@ import br.com.b2w.planetas.api.service.PlanetaService;
 @RequestMapping("/planetas")
 class PlanetasController {
 	
-	private static final String INFO = "Info";
+	private static final String MSG_PLANETA_EXISTENTE = "Este planeta já existe.";
+	private static final String MSG_ID_INVALIDO = "Para atualizar um planeta é necessário informar o id.";
 	
 	@Autowired
 	private PlanetaService planetaService;
@@ -62,8 +63,9 @@ class PlanetasController {
 			planetaNovo = planetaService.criar(planeta);
 			
 		} catch (DuplicateKeyException dke) {
-			return ResponseEntity.status(HttpStatus.CONFLICT)
-								 .header(INFO, "Este planeta já existe.").build();
+			
+			throw new ResponseStatusException(HttpStatus.CONFLICT, MSG_PLANETA_EXISTENTE, dke);	
+			
 		}
 		
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(planetaNovo.getId()).toUri();
@@ -125,11 +127,22 @@ class PlanetasController {
 	public ResponseEntity<Planeta> atualizar(@Valid @RequestBody Planeta planeta) {
 		
 		if(null == planeta.getId() || planeta.getId().isEmpty()) {
-			return ResponseEntity.badRequest()
-								 .header(INFO, "Para atualizar um planeta é necessário informar o id.").build();
+			
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, MSG_ID_INVALIDO, new IllegalArgumentException());	
+			
 		}
 		
-		Planeta planetaAtualizado = planetaService.alterar(planeta);
+		Planeta planetaAtualizado = new Planeta();
+		
+		try {
+			
+			planetaAtualizado = planetaService.alterar(planeta);
+			
+		} catch (IllegalArgumentException iae) {
+			
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, iae.getMessage(), iae);	
+			
+		}
 		
 		return ResponseEntity.ok(planetaAtualizado);
 		

@@ -3,8 +3,6 @@
  */
 package br.com.b2w.planetas.api.service;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -82,7 +80,7 @@ public interface PlanetaService {
 	 * @return o planeta atualizado.
 	 * 
 	 */
-	public Planeta alterar(Planeta planeta);
+	public Planeta alterar(Planeta planeta) throws IllegalArgumentException;
 	
 	
 	
