@@ -7,11 +7,13 @@ import java.net.URI;
 
 import javax.validation.Valid;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.b2w.planetas.api.dto.PlanetaDTO;
 import br.com.b2w.planetas.api.model.Planeta;
 import br.com.b2w.planetas.api.service.PlanetaService;
 
@@ -48,19 +51,20 @@ class PlanetasController {
 	private PlanetaService planetaService;
 	
 	
+	@Autowired
+    private ModelMapper modelMapper;
 	
 	
 	
 	
-	
-	@PostMapping
-	public ResponseEntity<Planeta> criar(@Valid @RequestBody(required=true) Planeta planeta) {
+	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<PlanetaDTO> criar(@Valid @RequestBody(required=true) PlanetaDTO planetaDTO) {
 		
 		Planeta planetaNovo = null; 
 		
 		try {
 			
-			planetaNovo = planetaService.criar(planeta);
+			planetaNovo = planetaService.criar(converterParaEntidade(planetaDTO));
 			
 		} catch (DuplicateKeyException dke) {
 			
@@ -70,7 +74,7 @@ class PlanetasController {
 		
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(planetaNovo.getId()).toUri();
 		
-		return ResponseEntity.created(location).body(planetaNovo);
+		return ResponseEntity.created(location).body(converterParaDTO(planetaNovo));
 		
 	}
 	
@@ -80,10 +84,14 @@ class PlanetasController {
 	
 	
 	
-	@GetMapping(value="/lista")	
-	public Page<Planeta> listar(Pageable pageable) {
+	@GetMapping(value="/lista", produces = MediaType.APPLICATION_JSON_VALUE)	
+	public Page<PlanetaDTO> listar(Pageable pageable) {
 		
-		return planetaService.listar(pageable);
+		Page<Planeta> pagePlaneta = planetaService.listar(pageable);
+		
+		Page<PlanetaDTO> pagePlanetaDTO = pagePlaneta.map(planeta -> converterParaDTO(planeta));
+		
+		return pagePlanetaDTO;
 		
 	}
 
@@ -93,12 +101,12 @@ class PlanetasController {
 	
 	
 	
-	@GetMapping("/{id}")
-	public  ResponseEntity<Planeta> buscarPeloId(@PathVariable String id) {
+	@GetMapping(value="/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public  ResponseEntity<PlanetaDTO> buscarPeloId(@PathVariable String id) {
 		
 		Planeta planeta = planetaService.obterPorId(id);
 		
-		return null == planeta ? ResponseEntity.notFound().build() : ResponseEntity.ok(planeta);
+		return null == planeta ? ResponseEntity.notFound().build() : ResponseEntity.ok(converterParaDTO(planeta));
 		
 	}
 	
@@ -108,12 +116,12 @@ class PlanetasController {
 	
 	
 	
-	@GetMapping("/")
-	public  ResponseEntity<Planeta> buscarPeloNome(@RequestParam("nome") String nome) {
+	@GetMapping(value="/", produces = MediaType.APPLICATION_JSON_VALUE)
+	public  ResponseEntity<PlanetaDTO> buscarPeloNome(@RequestParam("nome") String nome) {
 		
 		Planeta planeta = planetaService.obterPorNome(nome);
 		
-		return null==planeta ? ResponseEntity.notFound().build() : ResponseEntity.ok(planeta);
+		return null==planeta ? ResponseEntity.notFound().build() : ResponseEntity.ok(converterParaDTO(planeta));
 		
 	}
 	
@@ -123,10 +131,10 @@ class PlanetasController {
 	
 	
 	
-	@PutMapping
-	public ResponseEntity<Planeta> atualizar(@Valid @RequestBody Planeta planeta) {
+	@PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<PlanetaDTO> atualizar(@Valid @RequestBody PlanetaDTO planetaDTO) {
 		
-		if(null == planeta.getId() || planeta.getId().isEmpty()) {
+		if(null == planetaDTO.getId() || planetaDTO.getId().isEmpty()) {
 			
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, MSG_ID_INVALIDO, new IllegalArgumentException());	
 			
@@ -136,7 +144,7 @@ class PlanetasController {
 		
 		try {
 			
-			planetaAtualizado = planetaService.alterar(planeta);
+			planetaAtualizado = planetaService.alterar(converterParaEntidade(planetaDTO));
 			
 		} catch (IllegalArgumentException iae) {
 			
@@ -144,7 +152,7 @@ class PlanetasController {
 			
 		}
 		
-		return ResponseEntity.ok(planetaAtualizado);
+		return ResponseEntity.ok(converterParaDTO(planetaAtualizado));
 		
 	}
 	
@@ -166,6 +174,17 @@ class PlanetasController {
 
 	
 	
+	private PlanetaDTO converterParaDTO(Planeta planeta) {
+		return modelMapper.map(planeta, PlanetaDTO.class);
+	}
+	
+	
+	
+	
+	
+	private Planeta converterParaEntidade(PlanetaDTO planetaDTO) {
+	    return modelMapper.map(planetaDTO, Planeta.class);
+	}
 	
 
 }

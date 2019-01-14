@@ -34,11 +34,14 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.b2w.planetas.api.model.Planeta;
+import br.com.b2w.planetas.api.dto.PlanetaDTO;
 import br.com.b2w.planetas.core.app.PlanetasApplication;
 
 /**
- * @author Tomás
+ * 
+ * Testes integrados
+ * 
+ * @author Tomás Azevedo
  *
  */
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -54,9 +57,9 @@ public class PlanetasControllerTest {
 	@Autowired
 	private PlanetasController planetasController;
 	
-	private Planeta planetaTeste;
+	private PlanetaDTO planetaTeste;
 	
-	private JacksonTester<Planeta> json;
+	private JacksonTester<PlanetaDTO> json;
 	
 	
     
@@ -75,7 +78,7 @@ public class PlanetasControllerTest {
     	ObjectMapper objectMapper = new ObjectMapper();
         JacksonTester.initFields(this, objectMapper);
     	
-        planetaTeste = new Planeta();
+        planetaTeste = new PlanetaDTO();
         planetaTeste.setNome("Yavin IV");
         planetaTeste.setClima("temperate, tropical");
         planetaTeste.setTerreno("jungle, rainforests");
@@ -84,7 +87,7 @@ public class PlanetasControllerTest {
         MvcResult result = mockMvc.perform(get("/planetas/?nome=" + planetaTeste.getNome())).andReturn(); 
 		String stringJson = result.getResponse().getContentAsString();
 		if(!stringJson.isEmpty()) {
-			Planeta planetaCriado = json.parse(stringJson).getObject();		
+			PlanetaDTO planetaCriado = json.parse(stringJson).getObject();		
 			if(null != planetaCriado) planetaTeste.setId(planetaCriado.getId());
 		}
     	
@@ -128,7 +131,7 @@ public class PlanetasControllerTest {
     	
     	mockMvc.perform(post("/planetas")
 		       .contentType(MediaType.APPLICATION_JSON)
-		       .content(json.write(new Planeta()).getJson()))
+		       .content(json.write(new PlanetaDTO()).getJson()))
 			   .andExpect(status().isBadRequest());
     	
     }
@@ -238,7 +241,7 @@ public class PlanetasControllerTest {
     @Test
     public void test_10_alterar_um_planeta_inexistente() throws Exception {
     	
-    	Planeta planetaInexistente = new Planeta();
+    	PlanetaDTO planetaInexistente = new PlanetaDTO();
     	planetaInexistente.setNome("asdasasd dasd d");
     	planetaInexistente.setClima("asd, dsa");
     	planetaInexistente.setTerreno("aaa, asddss");
