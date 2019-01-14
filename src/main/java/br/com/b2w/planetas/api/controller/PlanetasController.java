@@ -68,6 +68,8 @@ class PlanetasController {
 			
 			planetaNovo = planetaService.criar(converterParaEntidade(planetaDTO));
 			
+			planetaService.atualizarQtdFilmesAsync(planetaNovo);
+			
 		} catch (DuplicateKeyException dke) {
 			
 			throw new ResponseStatusException(HttpStatus.CONFLICT, MSG_PLANETA_EXISTENTE, dke);	
@@ -80,11 +82,12 @@ class PlanetasController {
 		
 	}
 	
-	
-	
-	
-	
-	
+
+
+
+
+
+
 	@ApiImplicitParams({
 	    @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query",
 	            value = "Retorna a página informada (0..N)"),
@@ -156,6 +159,8 @@ class PlanetasController {
 		try {
 			
 			planetaAtualizado = planetaService.alterar(converterParaEntidade(planetaDTO));
+			
+			planetaService.atualizarQtdFilmesAsync(planetaAtualizado);
 			
 		} catch (IllegalArgumentException iae) {
 			

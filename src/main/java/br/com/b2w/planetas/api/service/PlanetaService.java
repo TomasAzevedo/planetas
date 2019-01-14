@@ -94,5 +94,17 @@ public interface PlanetaService {
 	public void excluir(String id);
 	
 	
+	
+	
+	/**
+	 * 
+	 * Método assíncrono para atualizar a quantidade de filmes de um determinado planeta.
+	 * 
+	 * @param planeta - dados do planeta.
+	 * 
+	 */
+	public void atualizarQtdFilmesAsync(Planeta planeta);
+	
+	
 
 }

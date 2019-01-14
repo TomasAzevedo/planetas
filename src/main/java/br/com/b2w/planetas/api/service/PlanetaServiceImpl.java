@@ -6,6 +6,7 @@ package br.com.b2w.planetas.api.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import br.com.b2w.planetas.api.model.Planeta;
@@ -44,13 +45,7 @@ public class PlanetaServiceImpl implements PlanetaService {
 	@Override
 	public Page<Planeta> listar(Pageable pageable) {
 		
-		Page<Planeta> page = planetaRespository.findAll(pageable);
-		
-		page.getContent().forEach(planeta -> {
-			planeta.setQtdFilmes(starWarService.obterQuantidadeFilmes(planeta.getNome()));
-		});
-		
-		return page;
+		return planetaRespository.findAll(pageable);
 		
 	}
 
@@ -63,10 +58,6 @@ public class PlanetaServiceImpl implements PlanetaService {
 		
 		Planeta planeta = planetaRespository.findById(id).orElse(null);
 		
-		if(null != planeta) {
-			planeta.setQtdFilmes(starWarService.obterQuantidadeFilmes(planeta.getNome()));
-		}
-		
 		return planeta;
 		
 	}
@@ -78,11 +69,7 @@ public class PlanetaServiceImpl implements PlanetaService {
 	@Override
 	public Planeta obterPorNome(String nome) {
 		
-		Planeta planeta = planetaRespository.findByNome(nome).orElse(null);
-		
-		if(null != planeta) {
-			planeta.setQtdFilmes(starWarService.obterQuantidadeFilmes(planeta.getNome()));
-		}
+		Planeta planeta = planetaRespository.findByNome(nome).orElse(null);	
 				
 		return planeta;
 		
@@ -96,6 +83,8 @@ public class PlanetaServiceImpl implements PlanetaService {
 	public Planeta alterar(Planeta planeta) throws IllegalArgumentException {
 		
 		if(planetaRespository.findById(planeta.getId()).isPresent()) {
+		
+		planeta.setQtdFilmes(null);
 		
 		Planeta planetaAtualizado = planetaRespository.save(planeta);
 		
@@ -115,6 +104,20 @@ public class PlanetaServiceImpl implements PlanetaService {
 	public void excluir(String id) {
 		
 		planetaRespository.deleteById(id);
+		
+	}
+
+
+
+
+
+	@Override
+	@Async
+	public void atualizarQtdFilmesAsync(Planeta planeta) {
+		
+		planeta.setQtdFilmes(starWarService.obterQuantidadeFilmes(planeta.getNome()));
+		
+		planetaRespository.save(planeta);
 		
 	}
 	
