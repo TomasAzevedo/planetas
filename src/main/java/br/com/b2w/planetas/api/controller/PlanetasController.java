@@ -31,6 +31,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import br.com.b2w.planetas.api.dto.PlanetaDTO;
 import br.com.b2w.planetas.api.model.Planeta;
 import br.com.b2w.planetas.api.service.PlanetaService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 
 
 /**
@@ -83,7 +85,16 @@ class PlanetasController {
 	
 	
 	
-	
+	@ApiImplicitParams({
+	    @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query",
+	            value = "Retorna a página informada (0..N)"),
+	    @ApiImplicitParam(name = "size", dataType = "integer", paramType = "query",
+	            value = "Número de registros por página."),
+	    @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
+	            value = "Ordenação no formato: nome_atributo(,asc|desc). " +
+	                    "Ordenação padrão é asc. " +
+	                    "Mais de um critério de ordenação é suportado.")
+	})
 	@GetMapping(value="/lista", produces = MediaType.APPLICATION_JSON_VALUE)	
 	public Page<PlanetaDTO> listar(Pageable pageable) {
 		
