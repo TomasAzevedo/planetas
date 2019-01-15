@@ -17,7 +17,7 @@ Essas instruções farão com que você tenha uma cópia do projeto em execuçã
 
 Após clonar ou fazer o download do projeto é possível rodar os testes ou startar a aplicação utilizando os comandos do Maven ou usando sua IDE favorita.
 
-## Métodos
+## Recursos
 
 A documentação detalhada da API pode ser encontrada [aqui](https://app.swaggerhub.com/apis-docs/TomasAzevedo/api-rest_planetas/1.0).
 
@@ -29,3 +29,17 @@ A documentação detalhada da API pode ser encontrada [aqui](https://app.swagger
 | `/planetas/lista?page=0&size=10` | `GET` | Lista utilizando paginação os planetas do servidor. |
 | `/planetas/{id}` | `GET` | Recupera um planeta pelo id. |
 | `/planetas/{id}` | `DELETE` | Exclui um planeta do servidor. |
+
+### Models
+
+PlanetaDTO
+
+```
+{
+	clima	string
+	id	string
+	nome	string
+	qtdFilmes	integer($int32)
+	terreno	string
+}
+```
