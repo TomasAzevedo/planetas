@@ -84,11 +84,11 @@ public class PlanetaServiceImpl implements PlanetaService {
 		
 		if(planetaRespository.findById(planeta.getId()).isPresent()) {
 		
-		planeta.setQtdFilmes(null);
-		
-		Planeta planetaAtualizado = planetaRespository.save(planeta);
-		
-		return planetaAtualizado;
+			planeta.setQtdFilmes(null);
+			
+			Planeta planetaAtualizado = planetaRespository.save(planeta);
+			
+			return planetaAtualizado;
 		
 		} else {
 			throw new IllegalArgumentException("Esse planeta não existe.");
@@ -115,9 +115,14 @@ public class PlanetaServiceImpl implements PlanetaService {
 	@Async
 	public void atualizarQtdFilmesAsync(Planeta planeta) {
 		
-		planeta.setQtdFilmes(starWarService.obterQuantidadeFilmes(planeta.getNome()));
+		if(planetaRespository.findById(planeta.getId()).isPresent()) {
+			
+			planeta.setQtdFilmes(starWarService.obterQuantidadeFilmes(planeta.getNome()));
+			
+			planetaRespository.save(planeta);
 		
-		planetaRespository.save(planeta);
+		}
+		
 		
 	}
 	
