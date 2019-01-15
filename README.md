@@ -19,7 +19,7 @@ Após clonar ou fazer o download do projeto é possível rodar os testes ou star
 
 ## Recursos
 
-A documentação detalhada da API pode ser encontrada [aqui](https://app.swaggerhub.com/apis-docs/TomasAzevedo/api-rest_planetas/1.0).
+A documentação detalhada da API pode ser encontrada [aqui](https://app.swaggerhub.com/apis-docs/TomasAzevedo/api-rest_planetas/1.0#/planetas-controller).
 
 | Recurso | Método | Descrição |
 |:-----------|:---------------|-------------|
@@ -36,10 +36,10 @@ PlanetaDTO
 
 ```
 {
-	clima	string
-	id	string
-	nome	string
-	qtdFilmes	integer($int32)
-	terreno	string
+	clima	   string
+	id	   string
+	nome	   string
+	qtdFilmes  integer($int32)
+	terreno	   string
 }
 ```
