@@ -54,7 +54,7 @@ Page<PlanetaDTO>
 	last	          boolean
 	number	          integer($int32)
 	numberOfElements  integer($int32)
-	pageable	  Pageable{
+	pageable	  Pageable {
 				offset	integer($int64)
 				pageNumber	integer($int32)
 				pageSize	integer($int32)
@@ -63,7 +63,7 @@ Page<PlanetaDTO>
 				unpaged	boolean
 			  }
 	size	          integer($int32)
-	sort	          Sort{
+	sort	          Sort {
 				empty	boolean
 				sorted	boolean
 				unsorted	boolean
