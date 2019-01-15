@@ -55,18 +55,18 @@ Page<PlanetaDTO>
 	number	          integer($int32)
 	numberOfElements  integer($int32)
 	pageable	  Pageable {
-				offset	integer($int64)
-				pageNumber	integer($int32)
-				pageSize	integer($int32)
-				paged	boolean
-				sort	Sort{...}
-				unpaged	boolean
+				offset	   integer($int64)
+				pageNumber integer($int32)
+				pageSize   integer($int32)
+				paged	   boolean
+				sort	   Sort{...}
+				unpaged	   boolean
 			  }
 	size	          integer($int32)
 	sort	          Sort {
-				empty	boolean
-				sorted	boolean
-				unsorted	boolean
+				empty	  boolean
+				sorted	  boolean
+				unsorted  boolean
 			  }
 	totalElements	  integer($int64)
 	totalPages	  integer($int32)
