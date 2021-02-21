@@ -68,13 +68,8 @@ public class PlanetasControllerTest {
     	
     	this.mockMvc = standaloneSetup(this.planetasController)
     			.setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
-                .setViewResolvers(new ViewResolver() {
-                    @Override
-                    public View resolveViewName(String viewName, Locale locale) throws Exception {
-                        return new MappingJackson2JsonView();
-                    }
-                }).build();
-    	
+                .setViewResolvers((viewName, locale) -> new MappingJackson2JsonView()).build();
+
     	ObjectMapper objectMapper = new ObjectMapper();
         JacksonTester.initFields(this, objectMapper);
     	

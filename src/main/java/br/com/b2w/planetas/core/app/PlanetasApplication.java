@@ -9,7 +9,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
 @Configuration
-@EnableAutoConfiguration
 @ComponentScan({"br.com.b2w.planetas.*"})
 @EnableAsync 
 public class PlanetasApplication {

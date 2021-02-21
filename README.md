@@ -1,21 +1,23 @@
 # API REST Planetas
 
-Uma REST API para incluir, consultar, alterar, listar e excluir um Planeta no servidor. A quantidade de filmes em que o planeta aparece é obtida através da API pública https://swapi.co/api/planets.
+Uma REST API para incluir, consultar, alterar, listar e excluir um Planeta no servidor. A quantidade de filmes em que o planeta aparece é obtida através da API pública https://swapi.dev/api/planets.
 
 ## Início
 
-Essas instruções farão com que você tenha uma cópia do projeto em execução na sua máquina local para fins de desenvolvimento e teste. 
+Projeto feito com Spring Boot e Mongo DB. 
 
 ### Pré-requisitos
 
-* Java 8
-* Maven 4.0.0
-* Spring Boot 2.1.1
-* MongoDB
+* Maven
+* Docker / Docker Compose
 
-### Instalação
+### Para criar as imagens e rodar os containers
 
-Após clonar ou fazer o download do projeto é possível rodar os testes ou startar a aplicação utilizando os comandos do Maven ou usando sua IDE favorita.
+```
+mvn package
+sudo docker build -t planetas-api .
+sudo docker-compose up
+```
 
 ## Recursos
 
